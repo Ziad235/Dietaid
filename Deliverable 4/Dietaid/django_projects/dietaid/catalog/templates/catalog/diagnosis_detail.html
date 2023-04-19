@@ -1,0 +1,10 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <h3>Patient Name: {{patient.first_name}} {{patient.last_name}} </h3>
+    <p>Diagnosis Summary: {{diagnosis.summary}}<p>
+    <div>
+        <p>Diagnoisis Notes: {{diagnosis.notes}}</p>
+    </div>
+    <a href = "{% url 'generate-mealplan'%}?diagnosis_id={{diagnosis.id}}">Generate meal plan.</a>
+{% endblock %}

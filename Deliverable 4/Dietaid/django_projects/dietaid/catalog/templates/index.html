@@ -1,0 +1,39 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    {% if is_doctor %}
+        <h1>Dashboard (for Doctor)</h1>
+        <p>Welcome to Dietaid</p>
+        <h3>The following is a list of patients:</h3>
+        {% for patient in patient_list %}
+        <li>
+            {{patient.first_name}} {{patient.last_name}}<a href="{% url 'create-diagnosis' %}?user_pk={{patient.id}}"> [add diagnosis]</a> 
+        </li>
+        {% endfor %}
+
+        <h3>The following is a list of pending mealplan for approval:</h3>
+        {% for mealplan in mealplan_list %}
+            <li>
+                Meal plan generated on {{mealplan.created_at}} [<a href = "{% url 'mealplan-detail' %}?mealplan_id={{mealplan.id}}">view</a>]
+            </li>
+        {% endfor %}
+        
+    {% else %}
+        <h1>Dashboard (for Patient)</h1>
+        <p>Welcome to Dietaid</p>
+        <h3>The following is a list of your past diagnosis:</h2>
+        {% for diagnosis in diagnosis_list %}
+            <li>
+                Diagnosis from {{diagnosis.created_at}} [<a href = "{% url 'diagnosis-detail' %}?diagnosis_id={{diagnosis.id}}">view detail</a>]
+            </li>
+        {% endfor %}
+
+        <h3>The following is a list of your generated mealplan:</h2>
+        {% for mealplan in mealplan_list %}
+            <li>
+                Meal plan generated on {{mealplan.created_at}} [<a href = "{% url 'mealplan-detail' %}?mealplan_id={{mealplan.id}}">view</a>]
+            </li>
+        {% endfor %}
+    {% endif %}
+    
+{% endblock %}

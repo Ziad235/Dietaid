@@ -1,0 +1,16 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <h3>Patient Name: {{patient.first_name}} {{patient.last_name}} </h3>
+    <p>Created by Dr. {{doctor.first_name}} {{doctor.last_name}}<p>
+    <p>Approval Status: {{mealplan.approved}}</p>
+    <div>
+        <p>Breakfast: {{mealplan.breakfast}}</p>
+        <p>Lunch: {{mealplan.lunch}}</p>
+        <p>Dinner: {{mealplan.dinner}}</p>
+        <p>Notes from doctor: {{mealplan.notes_from_doctor}}</p>
+    </div>
+    {% if is_doctor%}
+    <a href = "{% url 'edit-mealplan' %}?mealplan_id={{mealplan.id}}">Edit/Approve</a>
+    {% endif %}
+{% endblock %}

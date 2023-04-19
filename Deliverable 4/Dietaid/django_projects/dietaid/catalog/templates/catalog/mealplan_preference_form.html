@@ -1,0 +1,14 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>Choose your preference for mealplan</h1>
+
+  <form action="" method="post">
+    {% csrf_token %}
+    <table>
+    {{ form.as_table }}
+    </table>
+    <a href = "{% url 'index'%}">Cancel</a>
+    <input type="submit" value="Submit">
+  </form>
+{% endblock %}
