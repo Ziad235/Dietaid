@@ -31,6 +31,8 @@ class Mealplan(models.Model):
     patient_id = models.IntegerField()
     doctor_id = models.IntegerField()
     diagnosis_id = models.IntegerField()
+    
+    preference = models.CharField(max_length = 500)
 
     breakfast = models.CharField(max_length = 500)
     lunch = models.CharField(max_length = 500)

@@ -96,10 +96,12 @@ def generate_mealplan(request):
     if request.method == 'POST':
         form = MealplanPreferenceForm(request.POST)
         if form.is_valid():
+            preference = request.POST.get("preference")
             new_mealplan = Mealplan()
-            new_mealplan.breakfast = MEALPLAN_MAPPER[diagnosis.summary]['breakfast']
-            new_mealplan.lunch = MEALPLAN_MAPPER[diagnosis.summary]['lunch']
-            new_mealplan.dinner = MEALPLAN_MAPPER[diagnosis.summary]['dinner']
+            new_mealplan.preference = preference
+            new_mealplan.breakfast = MEALPLAN_MAPPER[diagnosis.summary]['breakfast'][preference]
+            new_mealplan.lunch = MEALPLAN_MAPPER[diagnosis.summary]['lunch'][preference]
+            new_mealplan.dinner = MEALPLAN_MAPPER[diagnosis.summary]['dinner'][preference]
             new_mealplan.doctor_id = diagnosis.doctor_id
             new_mealplan.patient_id = diagnosis.patient_id
             new_mealplan.diagnosis_id = diagnosis.id
