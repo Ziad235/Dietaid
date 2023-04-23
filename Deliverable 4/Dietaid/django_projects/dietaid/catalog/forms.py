@@ -57,7 +57,7 @@ class DiagnosisForm(forms.Form):
     notes = forms.CharField(widget=forms.Textarea)
 
 class MealplanPreferenceForm(forms.Form):
-    preference = forms.MultipleChoiceField(choices=PREFERECE_CHOICES, widget=forms.CheckboxSelectMultiple())
+    preference = forms.MultipleChoiceField(choices=PREFERECE_CHOICES) #widget=forms.CheckboxSelectMultiple()
     allergy = forms.CharField(help_text="Enter the allergy you have. ")
 
 class MealplanEditForm(forms.ModelForm):

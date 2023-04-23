@@ -37,7 +37,7 @@ MEALPLAN_MAPPER = {
         'lunch': "Cannellini Bean Salad, 600g / 3 cups cannellini beans, 70g / ⅜ cup cherry tomatoes, halved, ½ red onion, thinly sliced, ½ tbsp red wine vinegar, small bunch basil, torn",
         'dinner': "	Quick Moussaka",
         },
-    'Heart Health': {
+    'Heart health': {
         'breakfast': "1 serving Avocado Egg Toast",
         'lunch': "1 serving Loaded Black Bean Nacho Soup",
         'dinner': "1 serving Seared Salmon with Green Peppercorn Sauce, 1 cup steamed green beans, 1 baked medium red potato, 1 Tbsp. nonfat plain Greek yogurt and a pinch of pepper.",
