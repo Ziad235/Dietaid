@@ -1,16 +1,44 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-    <h3>Patient Name: {{patient.first_name}} {{patient.last_name}} </h3>
-    <p>Created by Dr. {{doctor.first_name}} {{doctor.last_name}}<p>
-    <p>Approval Status: {{mealplan.approved}}</p>
-    <div>
-        <p>Breakfast: {{mealplan.breakfast}}</p>
-        <p>Lunch: {{mealplan.lunch}}</p>
-        <p>Dinner: {{mealplan.dinner}}</p>
-        <p>Notes from doctor: {{mealplan.notes_from_doctor}}</p>
-    </div>
+    <h1>Mealplan for Patient {{patient.first_name}} {{patient.last_name}} </h1>
+    <p class='text-muted'>Created by Dr. {{doctor.first_name}} {{doctor.last_name}}<p>
+    {%if mealplan.approved%}
+        <div class="alert alert-success">    
+            Approval Status: <strong>{{mealplan.approved}}</strong>
+        </div>
+    {%else%}
+        <div class="alert alert-danger">
+            Approval Status: <strong>{{mealplan.approved}}</strong>
+        </div>
+    {%endif%}
+    <div class="container">
+        {% comment %} <h2>Striped Rows</h2>
+        <p>The .table-striped class adds zebra-stripes to a table:</p>             {% endcomment %}
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Meal</th>
+              <th>Recommended Portions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Breakfast</td>
+              <td>{{mealplan.breakfast}}</td>
+            </tr>
+            <tr>
+              <td>Lunch</td>
+              <td>{{mealplan.lunch}}</td>
+            </tr>
+            <tr>
+              <td>Dinner</td>
+              <td>{{mealplan.dinner}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     {% if is_doctor%}
-    <a href = "{% url 'edit-mealplan' %}?mealplan_id={{mealplan.id}}">Edit/Approve</a>
+    <a href = "{% url 'edit-mealplan' %}?mealplan_id={{mealplan.id}}" class='form-control btn btn-primary'>Edit/Approve</a>
     {% endif %}
 {% endblock %}
