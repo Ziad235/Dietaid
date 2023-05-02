@@ -53,7 +53,7 @@ def index(request):
     return render(request, 'index.html', context=context)
 
 
-
+@login_required
 def create_diagnosis(request):
 
     patient = get_object_or_404(User, pk=request.GET.get('user_pk'))
@@ -64,7 +64,17 @@ def create_diagnosis(request):
         if form.is_valid():
             diagnosis_choice = request.POST.get("diagnosis_summary")#form.diagnosis_summary
             diagnosis_notes = request.POST.get("notes") #form.notes
-            new_diagnosis = Diagnosis(patient_id = patient.id, doctor_id = request.user.id, summary = diagnosis_choice, notes = diagnosis_notes)
+
+            new_diagnosis = Diagnosis()
+            new_diagnosis.patient_id = patient.id
+            new_diagnosis.patient_lastname = patient.last_name
+
+            new_diagnosis.doctor_id = request.user.id
+            new_diagnosis.doctor_lastname = request.user.last_name
+
+            new_diagnosis.summary = diagnosis_choice
+            new_diagnosis.notes = diagnosis_notes
+            
             new_diagnosis.save()
             return HttpResponseRedirect(reverse('index'))
 
@@ -76,7 +86,7 @@ def create_diagnosis(request):
         }
         return render(request, 'catalog/create_diagnosis_form.html', context)
 
-
+@login_required
 def diagnosis_detail_view(request):
     diagnosis = get_object_or_404(Diagnosis, pk = request.GET.get('diagnosis_id'))
 
@@ -89,10 +99,14 @@ def diagnosis_detail_view(request):
     }
     return render(request, 'catalog/diagnosis_detail.html', context)
 
-
+@login_required
 def generate_mealplan(request):
     diagnosis = get_object_or_404(Diagnosis, id = request.GET.get('diagnosis_id'))
-    print(diagnosis)
+    
+    doctor = get_object_or_404(User, pk=diagnosis.doctor_id)
+    patient = get_object_or_404(User, pk=diagnosis.patient_id)
+
+
     if request.method == 'POST':
         form = MealplanPreferenceForm(request.POST)
         if form.is_valid():
@@ -103,7 +117,9 @@ def generate_mealplan(request):
             new_mealplan.lunch = MEALPLAN_MAPPER[diagnosis.summary]['lunch'][preference]
             new_mealplan.dinner = MEALPLAN_MAPPER[diagnosis.summary]['dinner'][preference]
             new_mealplan.doctor_id = diagnosis.doctor_id
+            new_mealplan.doctor_lastname = doctor.last_name
             new_mealplan.patient_id = diagnosis.patient_id
+            new_mealplan.patient_lastname = patient.last_name
             new_mealplan.diagnosis_id = diagnosis.id
             new_mealplan.save()
             return HttpResponseRedirect(reverse('index'))
@@ -114,7 +130,7 @@ def generate_mealplan(request):
         }
         return render(request, 'catalog/mealplan_preference_form.html', context)
 
-
+@login_required
 def mealplan_detail_view(request):
     mealplan = get_object_or_404(Mealplan, pk = request.GET.get('mealplan_id'))
     patient = get_object_or_404(User, pk = mealplan.patient_id)
@@ -129,6 +145,7 @@ def mealplan_detail_view(request):
     }
     return render(request, 'catalog/mealplan_detail.html', context)
 
+@login_required
 def edit_mealplan(request):
     mealplan = get_object_or_404(Mealplan, pk = request.GET.get('mealplan_id'))
     patient = get_object_or_404(User, pk = mealplan.patient_id)

@@ -4,32 +4,14 @@ import uuid # Required for unique book instances
 from django.contrib.auth.models import User
 from datetime import date
 
-# Create your models here.
-
-"""
-class Patient(models.Model):
-    # Model representing an patient.
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    date_of_birth = models.DateField(null=True, blank=True)
-    date_of_death = models.DateField('Died', null=True, blank=True)
-    genre = models.ManyToManyField(Genre, help_text='Select a genre for this book')
-
-    class Meta:
-        ordering = ['last_name', 'first_name']
-
-    def get_absolute_url(self):
-        #Returns the URL to access a particular author instance.
-        return reverse('author-detail', args=[str(self.id)])
-
-    def __str__(self):
-        #String for representing the Model object.
-        return f'{self.last_name}, {self.first_name}'
-"""
-
+# Create models here.
 class Mealplan(models.Model):
     patient_id = models.IntegerField()
+    patient_lastname = models.CharField(max_length = 100)
+
     doctor_id = models.IntegerField()
+    doctor_lastname = models.CharField(max_length = 100)
+
     diagnosis_id = models.IntegerField()
     
     preference = models.CharField(max_length = 500)
@@ -49,7 +31,10 @@ class Mealplan(models.Model):
 class Diagnosis(models.Model):
     # since both patients and doctors use the default user class, this is to avoid clashes
     patient_id = models.IntegerField()
+    patient_lastname = models.CharField(max_length = 100)
+
     doctor_id = models.IntegerField()
+    doctor_lastname = models.CharField(max_length = 100)
    
     summary = models.CharField(max_length = 100)
     notes = models.CharField(max_length = 300)

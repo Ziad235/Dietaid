@@ -12,32 +12,30 @@
             Approval Status: <strong>{{mealplan.approved}}</strong>
         </div>
     {%endif%}
-    <div class="container">
-        {% comment %} <h2>Striped Rows</h2>
-        <p>The .table-striped class adds zebra-stripes to a table:</p>             {% endcomment %}
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th>Meal</th>
-              <th>Recommended Portions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Breakfast</td>
-              <td>{{mealplan.breakfast}}</td>
-            </tr>
-            <tr>
-              <td>Lunch</td>
-              <td>{{mealplan.lunch}}</td>
-            </tr>
-            <tr>
-              <td>Dinner</td>
-              <td>{{mealplan.dinner}}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+    
+      <table class="table table-striped table-bordered is-breakable">
+        <thead>
+          <tr>
+            <th>Meal</th>
+            <th class = "w-75">Recommended Portions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td scope = "row">Breakfast</td>
+            <td>{{mealplan.breakfast}}</td>
+          </tr>
+          <tr>
+            <td scope = "row">Lunch</td>
+            <td>{{mealplan.lunch}}</td>
+          </tr>
+          <tr>
+            <td scope = "row">Dinner</td>
+            <td>{{mealplan.dinner}}</td>
+          </tr>
+        </tbody>
+      </table>
+      
     {% if is_doctor%}
     <a href = "{% url 'edit-mealplan' %}?mealplan_id={{mealplan.id}}" class='form-control btn btn-primary'>Edit/Approve</a>
     {% endif %}

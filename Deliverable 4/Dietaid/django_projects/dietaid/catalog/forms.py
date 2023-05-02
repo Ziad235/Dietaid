@@ -1,6 +1,7 @@
 import datetime
 
 from django import forms
+from django.db import models
 
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
@@ -69,3 +70,11 @@ class MealplanEditForm(forms.ModelForm):
             'dinner',
             'notes_from_doctor',
         ]
+
+        widgets = {
+            'breakfast': forms.Textarea,
+            'lunch': forms.Textarea,
+            'dinner': forms.Textarea,
+            'notes_from_doctor': forms.Textarea
+        }
+

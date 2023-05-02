@@ -7,41 +7,61 @@
 
         <h3>Mealplans pending for approval</h3>
         {% for mealplan in mealplan_list %}
-        <div class="list-group">
-            <a href="{% url 'mealplan-detail' %}?mealplan_id={{mealplan.id}}" class="list-group-item list-group-item-action flex-column align-items-start">
-                <div class="d-flex w-100 justify-content-between">
-                    <h5 class='mb-1'>{{patient.first_name}} {{patient.last_name}}'s mealplan</h5>
-                    <small class="text-muted">{{mealplan.created_at}}</small>
+            {% if mealplan.approved == False %}
+                <div class="list-group">
+                    <a href="{% url 'mealplan-detail' %}?mealplan_id={{mealplan.id}}" class="list-group-item list-group-item-action flex-column align-items-start">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class='mb-1'>{{mealplan.patient_lastname}}'s mealplan</h5>
+                            <small class="text-muted">{{mealplan.created_at}}</small>
+                        </div>
+                        <p class="mb-1">{{mealplan.notes_from_doctor}}</p>
+                    </a>
                 </div>
-                <p class="mb-1">{{mealplan.notes_from_doctor}}</p>
-            </a>
-        </div>
+            {% endif %}
         {% endfor %}
+
         <div class="panel-group">
             <div class="panel panel-default">
               <div class="panel-heading">
                 <h4 class="panel-title">
-                  <a data-toggle="collapse" href="#collapse1">Make a new diagnosis</a>
+                  <a data-toggle="collapse" href="#collapse1">Approved Mealplans</a>
                 </h4>
               </div>
               <div id="collapse1" class="panel-collapse collapse">
                 <ul class="list-group">
+                    {% for mealplan in mealplan_list %}
+                        {% if mealplan.approved %}                   
+                            <li class="list-group-item">
+                                <a href="{% url 'mealplan-detail' %}?mealplan_id={{mealplan.id}}" class="list-group-item list-group-item-action flex-column align-items-start">
+                                    {{mealplan.patient_lastname}}'s mealplan (created at {{mealplan.created_at}})
+                                </a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+              </div>
+            </div>
+        </div>
+
+
+        <div class="panel-group">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <a data-toggle="collapse" href="#collapse2">Make a new diagnosis</a>
+                </h4>
+              </div>
+              <div id="collapse2" class="panel-collapse collapse">
+                <ul class="list-group">             
                     {% for patient in patient_list %}
-                    <li class="list-group-item">
-                        <a href="{% url 'create-diagnosis' %}?user_pk={{patient.id}}"> {{patient.first_name}} {{patient.last_name}}</a>
-                    </li>
+                        <li class="list-group-item">
+                            <a href="{% url 'create-diagnosis' %}?user_pk={{patient.id}}"> {{patient.first_name}} {{patient.last_name}}</a>
+                        </li>
                     {% endfor %}
                 </ul>
               </div>
             </div>
           </div>
-        {% comment %} <h3>The following is a list of patients:</h3> {% endcomment %}
-        {% comment %} {% for patient in patient_list %}
-        <li>
-            {{patient.first_name}} {{patient.last_name}}<a href="{% url 'create-diagnosis' %}?user_pk={{patient.id}}"> [add diagnosis]</a> 
-        </li>
-        {% endfor %} {% endcomment %}
-
         
         
     {% else %}
@@ -53,7 +73,7 @@
                 <div class="list-group">
                     <a href="{% url 'diagnosis-detail' %}?diagnosis_id={{diagnosis.id}}" class="list-group-item list-group-item-action flex-column align-items-start">
                         <div class="d-flex w-100 justify-content-between">
-                            <h5 class='mb-1'>New Diagnosis</h5>
+                            <h5 class='mb-1'>Diagnosis from Dr. {{diagnosis.doctor_lastname}}</h5>
                             <small class="text-muted">{{diagnosis.created_at}}</small>
                         </div>
                         <p class="mb-1">{{mealplan.notes_from_doctor}}</p>
@@ -76,6 +96,11 @@
                         {% for mealplan in mealplan_list %}
                         <li class="list-group-item">
                             <a href="{% url 'mealplan-detail' %}?mealplan_id={{mealplan.id}}"> Meal plan generated on {{mealplan.created_at}}</a>
+                            {% if mealplan.approved%}                               
+                                <span class="badge progress-bar-success">Approved</span>
+                            {% else %}                                
+                                <span class="badge progress-bar-light">Unapproved</span>
+                            {% endif%}
                         </li>
                         {% endfor %}
                     </ul>
