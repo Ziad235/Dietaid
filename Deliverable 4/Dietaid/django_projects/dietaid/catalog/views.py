@@ -21,7 +21,7 @@ from .meal_plan_config import MEALPLAN_MAPPER
 from catalog.forms import DiagnosisForm, MealplanPreferenceForm, MealplanEditForm
 
 #=====================
-
+# check if the logged in user is doctor or patient
 def is_doctor(user):
     if(user.groups.filter(name='Doctor').exists()):
         return True
@@ -52,7 +52,7 @@ def index(request):
     # Render the HTML template index.html with the data in the context variable
     return render(request, 'index.html', context=context)
 
-
+# form to create the diagnosis
 @login_required
 def create_diagnosis(request):
 
@@ -99,6 +99,7 @@ def diagnosis_detail_view(request):
     }
     return render(request, 'catalog/diagnosis_detail.html', context)
 
+# form to generate the mealplan
 @login_required
 def generate_mealplan(request):
     diagnosis = get_object_or_404(Diagnosis, id = request.GET.get('diagnosis_id'))
@@ -106,7 +107,7 @@ def generate_mealplan(request):
     doctor = get_object_or_404(User, pk=diagnosis.doctor_id)
     patient = get_object_or_404(User, pk=diagnosis.patient_id)
 
-
+    # store the form
     if request.method == 'POST':
         form = MealplanPreferenceForm(request.POST)
         if form.is_valid():
@@ -123,13 +124,14 @@ def generate_mealplan(request):
             new_mealplan.diagnosis_id = diagnosis.id
             new_mealplan.save()
             return HttpResponseRedirect(reverse('index'))
-    else: 
+    else: # render the form 
         form = MealplanPreferenceForm()
         context = {
             'form': form,
         }
         return render(request, 'catalog/mealplan_preference_form.html', context)
 
+# render mealplan details
 @login_required
 def mealplan_detail_view(request):
     mealplan = get_object_or_404(Mealplan, pk = request.GET.get('mealplan_id'))
@@ -145,13 +147,13 @@ def mealplan_detail_view(request):
     }
     return render(request, 'catalog/mealplan_detail.html', context)
 
+# form to edit meal plan
 @login_required
 def edit_mealplan(request):
     mealplan = get_object_or_404(Mealplan, pk = request.GET.get('mealplan_id'))
     patient = get_object_or_404(User, pk = mealplan.patient_id)
-    #patient = User.objects.filter(id__exact = mealplan.patient_id)
-    #doctor = User.objects.filter(id__exact = mealplan.doctor_id)
 
+    # to submit form 
     if request.method == 'POST':
         form = MealplanEditForm(request.POST, instance = mealplan)
         if form.is_valid():
@@ -160,6 +162,7 @@ def edit_mealplan(request):
             mealplan.save()
             return HttpResponseRedirect(reverse('index'))
     
+    # to render form
     else:
         form = MealplanEditForm(instance=mealplan)
         context = {
@@ -170,41 +173,4 @@ def edit_mealplan(request):
 
 
 
-            
-
-
-
-
-
-@login_required
-@permission_required('catalog.can_mark_returned', raise_exception=True)
-def renew_book_librarian(request, pk):
-    """View function for renewing a specific BookInstance by librarian."""
-    book_instance = get_object_or_404(BookInstance, pk=pk)
-
-    # If this is a POST request then process the Form data
-    if request.method == 'POST':
-
-        # Create a form instance and populate it with data from the request (binding):
-        form = RenewBookForm(request.POST)
-
-        # Check if the form is valid:
-        if form.is_valid():
-            # process the data in form.cleaned_data as required (here we just write it to the model due_back field)
-            book_instance.due_back = form.cleaned_data['renewal_date']
-            book_instance.save()
-
-            # redirect to a new URL:
-            return HttpResponseRedirect(reverse('all-borrowed'))
-
-    # If this is a GET (or any other method) create the default form.
-    else:
-        proposed_renewal_date = datetime.date.today() + datetime.timedelta(weeks=3)
-        form = RenewBookForm(initial={'renewal_date': proposed_renewal_date})
-
-    context = {
-        'form': form,
-        'book_instance': book_instance,
-    }
-
-    return render(request, 'catalog/book_renew_librarian.html', context)
+        
