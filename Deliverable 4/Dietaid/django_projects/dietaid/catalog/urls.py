@@ -1,4 +1,6 @@
 from django.urls import path
+from django.views.generic.base import RedirectView
+from django.contrib import admin
 from . import views
 
 urlpatterns = [
@@ -26,3 +28,4 @@ urlpatterns+=[
 urlpatterns+=[
     path('edit_mealplan/', views.edit_mealplan, name = 'edit-mealplan'),
 ]
+

@@ -33,8 +33,10 @@ def is_doctor(user):
 # decorator to require login before seeing the page
 @login_required
 def index(request):
-    #View function for home page of site.
+    if(request.user.groups.filter(name='Admin').exists()):
+        return HttpResponseRedirect(reverse('admin:index'))
 
+    #View function for home page of site.
     all_patients = User.objects.filter(groups__name__in = ['Patient'])
     all_diagnosis = Diagnosis.objects.filter(patient_id__exact = request.user.id).order_by('-created_at')
     my_mealplans = Mealplan.objects.filter(patient_id__exact = request.user.id).order_by('-created_at')
@@ -62,6 +64,7 @@ def create_diagnosis(request):
 
         form = DiagnosisForm(request.POST)
         if form.is_valid():
+            diagnosis_description = request.POST.get("diagnosis_description")
             diagnosis_choice = request.POST.get("diagnosis_summary")#form.diagnosis_summary
             diagnosis_notes = request.POST.get("notes") #form.notes
 
@@ -72,6 +75,7 @@ def create_diagnosis(request):
             new_diagnosis.doctor_id = request.user.id
             new_diagnosis.doctor_lastname = request.user.last_name
 
+            new_diagnosis.description = diagnosis_description
             new_diagnosis.summary = diagnosis_choice
             new_diagnosis.notes = diagnosis_notes
             
@@ -112,8 +116,10 @@ def generate_mealplan(request):
         form = MealplanPreferenceForm(request.POST)
         if form.is_valid():
             preference = request.POST.get("preference")
+            allergy = request.POST.get("allergy")
             new_mealplan = Mealplan()
             new_mealplan.preference = preference
+            new_mealplan.allergy = allergy
             new_mealplan.breakfast = MEALPLAN_MAPPER[diagnosis.summary]['breakfast'][preference]
             new_mealplan.lunch = MEALPLAN_MAPPER[diagnosis.summary]['lunch'][preference]
             new_mealplan.dinner = MEALPLAN_MAPPER[diagnosis.summary]['dinner'][preference]
@@ -167,7 +173,9 @@ def edit_mealplan(request):
         form = MealplanEditForm(instance=mealplan)
         context = {
             'form':form,
+            'mealplan': mealplan,
             'patient_name': patient.first_name + " " + patient.last_name, 
+            'patient': patient
         }
         return render(request, 'catalog/edit_mealplan.html', context)
 

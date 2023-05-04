@@ -2,15 +2,6 @@
 
 {% block content %}
   <h1>Diagnosis for: {{ patient_name }}</h1>
-
-  {% comment %} <div class="dropdown">
-    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Dropdown Example
-    <span class="caret"></span></button>
-    <ul class="dropdown-menu">
-      <li><a href="#">{{ form.as_table }}</a></li>
-    </ul>
-  </div> {% endcomment %}
-
   <form action="" method="post">
     {% csrf_token %}
     <table class="table table-striped">

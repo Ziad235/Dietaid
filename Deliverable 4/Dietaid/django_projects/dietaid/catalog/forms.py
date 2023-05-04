@@ -54,6 +54,7 @@ PREFERECE_CHOICES = [
 
 
 class DiagnosisForm(forms.Form):
+    diagnosis_description = forms.CharField(widget=forms.Textarea)
     diagnosis_summary= forms.MultipleChoiceField(choices = DIAGNOSIS_CHOICES)
     notes = forms.CharField(widget=forms.Textarea)
 

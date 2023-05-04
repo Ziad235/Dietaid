@@ -2,7 +2,19 @@ from django.db import models
 from django.urls import reverse # Used to generate URLs by reversing the URL patterns
 import uuid # Required for unique book instances
 from django.contrib.auth.models import User
+
 from datetime import date
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    sex = models.CharField(max_length=10)
+    age = models.IntegerField()
+    weight = models.FloatField()
+    height = models.FloatField()
+    BMI = models.FloatField()
+    body_fat_percentage = models.FloatField()
+    medical_history = models.CharField(max_length=500)
+
 
 # Create models here.
 class Mealplan(models.Model):
@@ -15,6 +27,7 @@ class Mealplan(models.Model):
     diagnosis_id = models.IntegerField()
     
     preference = models.CharField(max_length = 500)
+    allergy = models.CharField(max_length = 50)
 
     breakfast = models.CharField(max_length = 500)
     lunch = models.CharField(max_length = 500)
@@ -36,6 +49,7 @@ class Diagnosis(models.Model):
     doctor_id = models.IntegerField()
     doctor_lastname = models.CharField(max_length = 100)
    
+    description = models.CharField(max_length=500)
     summary = models.CharField(max_length = 100)
     notes = models.CharField(max_length = 300)
 
