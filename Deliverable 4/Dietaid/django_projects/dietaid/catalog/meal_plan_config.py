@@ -1,4 +1,5 @@
 DIAGNOSIS_CHOICES = [
+    ("General consultation", "General consultation"),
     ("IBS", "IBS"),
     ("Fatty liver", "Fatty liver"),
     ("High blood pressure", "High blood pressure"), 
@@ -17,6 +18,20 @@ DIAGNOSIS_CHOICES = [
 ]
 
 MEALPLAN_MAPPER = {
+    'General consultation': {
+        'breakfast': {"None": "Enter recommendations here!", 
+                      "Vegetarian": "Enter recommendations here!",
+                      "Vegan": "Enter recommendations here!",
+                      "Pescatarian": "Enter recommendations here!"},
+        'lunch': {"None": "Enter recommendations here!",
+                      "Vegetarian": "Enter recommendations here!",
+                      "Vegan": "Enter recommendations here!",
+                      "Pescatarian": "Enter recommendations here!"},
+        'dinner': {"None": "Enter recommendations here!",
+                      "Vegetarian": "Enter recommendations here!",
+                      "Vegan": "Enter recommendations here!",
+                      "Pescatarian": "Enter recommendations here!"},
+    },
     'IBS': {
         'breakfast': {"None": "Low FODMAP Blueberry Smoothie", 
                       "Vegetarian": "1 cup of low-fat Greek yogurt or plant-based yogurt alternative, 1 small bowl of low-fiber cereal like rice or corn flakes",

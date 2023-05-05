@@ -28,6 +28,7 @@ DIAGNOSIS_CHOICES = [
 """
 
 DIAGNOSIS_CHOICES = [
+    ("General consultation", "General consultation"),
     ("IBS", "IBS"),
     ("Fatty liver", "Fatty liver"),
     ("High blood pressure", "High blood pressure"), 
