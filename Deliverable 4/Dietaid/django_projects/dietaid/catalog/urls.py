@@ -29,3 +29,11 @@ urlpatterns+=[
     path('edit_mealplan/', views.edit_mealplan, name = 'edit-mealplan'),
 ]
 
+urlpatterns+=[
+    path('search_patients/', views.search_patients, name = 'search-patients'),
+]
+
+urlpatterns+=[
+    path('patient_profile/', views.patient_profile, name = 'patient-profile'),
+]
+

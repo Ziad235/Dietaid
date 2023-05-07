@@ -76,11 +76,9 @@
                             <h5 class='mb-1'>Diagnosis from Dr. {{diagnosis.doctor_lastname}}</h5>
                             <small class="text-muted">{{diagnosis.created_at}}</small>
                         </div>
-                        <p class="mb-1">{{mealplan.notes_from_doctor}}</p>
+                        <p class="mb-1">{{diagnosis.notes_from_doctor}}</p>
                     </a>
                 </div>
-                {% comment %} Diagnosis from {{diagnosis.created_at}} [<a href = "{% url 'diagnosis-detail' %}?diagnosis_id={{diagnosis.id}}">view detail</a>] {% endcomment %}
-            {% comment %} </li> {% endcomment %}
         {% endfor %}
 
         <h3>The following is a list of your generated mealplan:</h2>
@@ -107,11 +105,6 @@
                   </div>
                 </div>
               </div>
-        {% comment %} {% for mealplan in mealplan_list %}
-            <li>
-                Meal plan generated on {{mealplan.created_at}} [<a href = "{% url 'mealplan-detail' %}?mealplan_id={{mealplan.id}}">view</a>]
-            </li>
-        {% endfor %} {% endcomment %}
     {% endif %}
     
 {% endblock %}

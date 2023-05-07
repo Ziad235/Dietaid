@@ -27,6 +27,11 @@ def is_doctor(user):
         return True
     else:
         return False
+def is_patient(user):
+    if(user.groups.filter(name='Patient').exists()):
+        return True
+    else:
+        return False
 
 
 
@@ -153,6 +158,20 @@ def mealplan_detail_view(request):
     }
     return render(request, 'catalog/mealplan_detail.html', context)
 
+@login_required
+def patient_profile(request):
+    
+    patient = get_object_or_404(User, pk = request.GET.get('patient_id'))
+    diagnosis_list = Diagnosis.objects.filter(patient_id__exact = patient.id).order_by('-created_at')
+    mealplan_list = Mealplan.objects.filter(patient_id__exact = patient.id).order_by('-created_at')
+
+    context = {
+        "patient": patient,
+        "diagnosis_list": diagnosis_list,
+        "mealplan_list": mealplan_list,
+    }
+    return render(request, 'catalog/patient_profile.html', context)
+
 # form to edit meal plan
 @login_required
 def edit_mealplan(request):
@@ -179,6 +198,29 @@ def edit_mealplan(request):
         }
         return render(request, 'catalog/edit_mealplan.html', context)
 
+@login_required
+def search_patients(request):
+    context = {
+        "is_doctor": True,
+        "patients": [],
+    }
+    if request.method == "POST":
+        patient_name = request.POST.get("patient_name")
+        if patient_name == "":
+            return render(request, 'catalog/search_patients.html', context)
+        
+        found_patients = User.objects.filter(first_name__startswith = patient_name)
+        context["patients"] = []
+
+        # only include patients in teh system
+        for p in found_patients:
+            if is_patient(p):
+                context['patients'].append(p)
+
+        return render(request, 'catalog/search_patients.html', context)
+
+    else: 
+        return render(request, 'catalog/search_patients.html', context)
 
 
         

@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from datetime import date
 
 class UserProfile(models.Model):
+    role = models.CharField(max_length=10) # patient, doctor, or admin
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     sex = models.CharField(max_length=10)
     age = models.IntegerField()

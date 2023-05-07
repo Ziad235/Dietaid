@@ -1,7 +1,7 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-    <h1>My Diagnosis</h1>
+    <h1>Diagnosis <small>from  {{diagnosis.created_at}}</small></h1>
     {% comment %} <h3> {{patient.first_name}} {{patient.last_name}} </h3> {% endcomment %}
     <table class="table table-striped table-bordered">
         <tbody>
@@ -19,5 +19,7 @@
             </tr>
         </tbody>
     </table>
-    <a href = "{% url 'generate-mealplan'%}?diagnosis_id={{diagnosis.id}}" class='form-control btn btn-primary'>Generate meal plan.</a>
+    {% if user.userprofile.role == 'patient'%}
+        <a href = "{% url 'generate-mealplan'%}?diagnosis_id={{diagnosis.id}}" class='form-control btn btn-primary'>Generate meal plan.</a>
+    {% endif %}
 {% endblock %}

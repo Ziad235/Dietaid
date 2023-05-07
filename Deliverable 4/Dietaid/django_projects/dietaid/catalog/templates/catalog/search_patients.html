@@ -1,0 +1,34 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-sm-12">
+      <h2>Search for Patients</h2>
+    </div>
+    <form action = '../search_patients/' method = 'POST'>
+        {% csrf_token %} 
+        <div class="col-sm-8 col-md-6">
+        <div class="input-group">
+                <input type="text" class="form-control" name = "patient_name" placeholder="Search patients by name...">
+                <span class="input-group-btn">
+                    <button class="btn btn-success" type="submit">Search</button>
+                </span>
+        </div>
+        </div>
+    </form>
+</div>
+</br>
+<ul class="list-group">
+    {% for patient in patients %}                
+        <li class="list-group-item">
+            <a href="{% url 'patient-profile' %}?patient_id={{patient.id}}" class="list-group-item list-group-item-action flex-column align-items-start">
+                {{patient.first_name}} {{patient.last_name}}'s profile
+            </a>
+        </li>
+    {% endfor %}
+</ul>
+
+       
+
+{% endblock %}

@@ -1,0 +1,92 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+<h1>{{patient.first_name}} {{patient.last_name}}'s Profile</h1>
+  <table class="table table-bordered">
+    <thead>
+      <tr class="info">
+        <th colspan="2">Patient's Information</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">Sex</th>
+        <td>{{patient.userprofile.sex}} </td>
+      </tr>
+      <tr>
+        <th scope="row">Age</th>
+        <td>{{patient.userprofile.age}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Weight</th>
+        <td>{{patient.userprofile.weight}} kg</td>
+      </tr>
+      <tr>
+        <th scope="row">Height</th>
+        <td>{{patient.userprofile.height}} cm</td>
+      </tr>
+      <tr>
+        <th scope="row">BMI</th>
+        <td>{{patient.userprofile.BMI}} kg/m<sup>2</sup></td>
+      </tr>
+      <tr>
+        <th scope="row">Body Fat Percentage</th>
+        <td>{{patient.userprofile.body_fat_percentage}} %</td>
+      </tr>
+      <tr>
+        <th scope="row">Medical History</th>
+        <td>{{patient.userprofile.medical_history}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>{{patient.last_name}}'s mealplans:</h2>
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#collapse1">View generated mealplans</a>
+            </h4>
+            </div>
+            <div id="collapse1" class="panel-collapse collapse">
+            <ul class="list-group">
+                {% for mealplan in mealplan_list %}
+                <li class="list-group-item">
+                    <a href="{% url 'mealplan-detail' %}?mealplan_id={{mealplan.id}}"> Meal plan generated on {{mealplan.created_at}}</a>
+                    {% if mealplan.approved%}                               
+                        <span class="badge progress-bar-success">Approved</span>
+                    {% else %}                                
+                        <span class="badge progress-bar-light">Unapproved</span>
+                    {% endif%}
+                </li>
+                {% endfor %}
+            </ul>
+            </div>
+        </div>
+    </div>
+
+    <h3>{{patient.last_name}}'s diagnosis:</h3>
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#collapse2">View generated mealplans</a>
+            </h4>
+            </div>
+            <div id="collapse2" class="panel-collapse collapse">
+            <ul class="list-group">
+                {% for diagnosis in diagnosis_list %}
+                <li class="list-group-item">
+                    <a href="{% url 'diagnosis-detail' %}?diagnosis_id={{diagnosis.id}}"> 
+                        Diagnosis from Dr. {{diagnosis.doctor_lastname}}, <small>{{diagnosis.created_at}}</small>
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+            </div>
+        </div>
+    </div>
+
+    
+{% endblock %}
