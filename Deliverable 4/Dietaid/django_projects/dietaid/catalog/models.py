@@ -38,6 +38,8 @@ class Mealplan(models.Model):
 
     approved = models.BooleanField(default = False)
 
+    checked_in_on = models.CharField(default = "", max_length=100)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

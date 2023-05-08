@@ -13,11 +13,14 @@ from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.models import User
+from datetime import date
 
 from .meal_plan_config import MEALPLAN_MAPPER
 
+# import decorator
+from .decorators import doctor_access_only
 
-### inmport new form here
+# inmport new form here
 from catalog.forms import DiagnosisForm, MealplanPreferenceForm, MealplanEditForm
 
 #=====================
@@ -59,8 +62,12 @@ def index(request):
     # Render the HTML template index.html with the data in the context variable
     return render(request, 'index.html', context=context)
 
+def not_authorized(request):
+    return render(request, "catalog/not_authorized.html")
+
 # form to create the diagnosis
 @login_required
+@doctor_access_only()
 def create_diagnosis(request):
 
     patient = get_object_or_404(User, pk=request.GET.get('user_pk'))
@@ -99,6 +106,10 @@ def create_diagnosis(request):
 def diagnosis_detail_view(request):
     diagnosis = get_object_or_404(Diagnosis, pk = request.GET.get('diagnosis_id'))
 
+    # prevent patient from seeing other's diagnosis
+    if request.user.id != diagnosis.patient_id and request.user.userprofile.role=="patient":
+        return HttpResponseRedirect(reverse('not-authorized'))
+
     patient = User.objects.filter(id__exact = diagnosis.patient_id)
     doctor = User.objects.filter(id__exact = diagnosis.doctor_id)
     context = {
@@ -112,6 +123,9 @@ def diagnosis_detail_view(request):
 @login_required
 def generate_mealplan(request):
     diagnosis = get_object_or_404(Diagnosis, id = request.GET.get('diagnosis_id'))
+
+    if diagnosis.patient_id!=request.user.id and request.user.userprofile.role=="patient":
+        return HttpResponseRedirect(reverse('not-authorized'))
     
     doctor = get_object_or_404(User, pk=diagnosis.doctor_id)
     patient = get_object_or_404(User, pk=diagnosis.patient_id)
@@ -146,19 +160,43 @@ def generate_mealplan(request):
 @login_required
 def mealplan_detail_view(request):
     mealplan = get_object_or_404(Mealplan, pk = request.GET.get('mealplan_id'))
+    diagnosis = get_object_or_404(Diagnosis, pk = mealplan.diagnosis_id)
+
+    if request.user.id != mealplan.patient_id and request.user.userprofile.role=="patient":
+        return HttpResponseRedirect(reverse('not-authorized'))
+    
     patient = get_object_or_404(User, pk = mealplan.patient_id)
     doctor = get_object_or_404(User, pk = mealplan.doctor_id)
 
+    today = date.today()
+    checked_in = False
+
+    if str(today) in mealplan.checked_in_on.split(','):
+        checked_in = True
+
+    if request.method == "POST":
+        if mealplan.checked_in_on == "":
+            mealplan.checked_in_on = str(today)
+        else:
+            mealplan.checked_in_on = mealplan.checked_in_on + ',' + str(today)
+        mealplan.save()
+        checked_in = True
+
+    checked_in_log = mealplan.checked_in_on.split(',')
+
     context = {
-        'diagnosis': mealplan,
+        'diagnosis': diagnosis,
         'patient': patient,
         'doctor': doctor,
         'mealplan': mealplan,
         'is_doctor': is_doctor(request.user),
+        'checked_in': checked_in,
+        'checked_in_log': checked_in_log,
     }
     return render(request, 'catalog/mealplan_detail.html', context)
 
 @login_required
+@doctor_access_only()
 def patient_profile(request):
     
     patient = get_object_or_404(User, pk = request.GET.get('patient_id'))
@@ -173,7 +211,9 @@ def patient_profile(request):
     return render(request, 'catalog/patient_profile.html', context)
 
 # form to edit meal plan
+
 @login_required
+@doctor_access_only()
 def edit_mealplan(request):
     mealplan = get_object_or_404(Mealplan, pk = request.GET.get('mealplan_id'))
     patient = get_object_or_404(User, pk = mealplan.patient_id)
@@ -199,6 +239,7 @@ def edit_mealplan(request):
         return render(request, 'catalog/edit_mealplan.html', context)
 
 @login_required
+@doctor_access_only()
 def search_patients(request):
     context = {
         "is_doctor": True,

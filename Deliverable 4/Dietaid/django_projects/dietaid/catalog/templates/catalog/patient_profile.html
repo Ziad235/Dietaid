@@ -3,7 +3,13 @@
 {% block content %}
 
 <h1>{{patient.first_name}} {{patient.last_name}}'s Profile</h1>
-  <table class="table table-bordered">
+
+<h2>
+    <a href="{% url 'create-diagnosis' %}?user_pk={{patient.id}}" class = "btn btn-info" role = "button"> Make a diagnosis</a>
+</h2>
+
+
+<table class="table table-bordered">
     <thead>
       <tr class="info">
         <th colspan="2">Patient's Information</th>
@@ -41,6 +47,7 @@
     </tbody>
   </table>
 
+
   <h3>{{patient.last_name}}'s mealplans:</h2>
     <div class="panel-group">
         <div class="panel panel-default">
@@ -71,7 +78,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">
             <h4 class="panel-title">
-                <a data-toggle="collapse" href="#collapse2">View generated mealplans</a>
+                <a data-toggle="collapse" href="#collapse2">View past diagnosis</a>
             </h4>
             </div>
             <div id="collapse2" class="panel-collapse collapse">

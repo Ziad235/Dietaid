@@ -2,16 +2,26 @@
 
 {% block content %}
     <h1>Mealplan for Patient {{patient.first_name}} {{patient.last_name}} </h1>
+    <h3>Diagnosis <small>from  {{diagnosis.created_at}}</small></h3>
+    {% comment %} <h3> {{patient.first_name}} {{patient.last_name}} </h3> {% endcomment %}
+    <table class="table table-striped table-bordered">
+        <tbody>
+            <tr>
+                <th>Diagnosis Description</td>
+                <td>{{diagnosis.description}}</td>
+            </tr>
+            <tr>
+                <th>Diagnosis Summary</td>
+                <td>{{diagnosis.summary}}</td>
+            </tr>
+            <tr>
+                <th>Diagnoisis Notes</td>
+                <td>{{diagnosis.notes}}</td>
+            </tr>
+        </tbody>
+    </table>
     <p class='text-muted'>Created by Dr. {{doctor.first_name}} {{doctor.last_name}}<p>
-    {%if mealplan.approved%}
-        <div class="alert alert-success">    
-            Approval Status: <strong>{{mealplan.approved}}</strong>
-        </div>
-    {%else%}
-        <div class="alert alert-danger">
-            Approval Status: <strong>{{mealplan.approved}}</strong>
-        </div>
-    {%endif%}
+    
     
       <table class="table table-striped table-bordered">
         <thead>
@@ -35,8 +45,35 @@
           </tr>
         </tbody>
       </table>
-      
+
+    {%if mealplan.approved%}
+        <div class="alert alert-success">    
+            Approval Status: <strong>{{mealplan.approved}}</strong>
+        </div>
+    {%else%}
+        <div class="alert alert-danger">
+            Approval Status: <strong>{{mealplan.approved}}</strong>
+        </div>
+    {%endif%}
+
+    <div>
+    <p>Mealplan followed on: </p>
+    {% for log in checked_in_log%}
+      <span class="badge progress-bar-success">{{log}}</span>
+    {% endfor %}
+    </div>
+    </br>
+
     {% if is_doctor%}
     <a href = "{% url 'edit-mealplan' %}?mealplan_id={{mealplan.id}}" class='form-control btn btn-primary'>Edit/Approve</a>
+    {% else %}
+      {% if checked_in %}
+        <p>You have checked in today.</p>
+      {% elif mealplan.approved%}
+        <form method="post">
+          {% csrf_token %}
+          <button class="btn btn-primary" type="submit">I follow this mealplan today. </button>
+        </form>
+      {% endif %}
     {% endif %}
 {% endblock %}

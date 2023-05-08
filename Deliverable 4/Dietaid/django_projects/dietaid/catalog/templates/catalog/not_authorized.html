@@ -1,0 +1,6 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>You are not authorized to see this page.</h1>
+  <a href="{% url 'logout'%}">Click here to logout and login with an authorized account.</a>
+{% endblock %}

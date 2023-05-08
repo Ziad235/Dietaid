@@ -37,3 +37,7 @@ urlpatterns+=[
     path('patient_profile/', views.patient_profile, name = 'patient-profile'),
 ]
 
+urlpatterns+=[
+    path('not_authorized/', views.not_authorized, name = 'not-authorized'),
+]
+
